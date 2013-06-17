@@ -23,7 +23,7 @@ import utils.Loggable;
 
 @Stateless
 @Loggable
-public class PersonService implements Serializable {
+public class EventService implements Serializable {
 
     // ======================================
     // =             Attributes             =
