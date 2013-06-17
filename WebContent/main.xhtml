@@ -84,7 +84,19 @@
 							<h:outputText value="#{friend.login}" />
 						</h:column>
 					</h:dataTable>
-				</h:panelGroup></td>
+				</h:panelGroup>
+			</td>
+			<td style="vertical-align:top">
+				<h1>Here is the list of events</h1>
+				<h:dataTable var="events" value="#{eventManager.allEvents}">
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="name"/>
+						</f:facet>
+						<h:outputText value="#{events.name}"/>
+					</h:column>
+				</h:dataTable>
+			</td>
 			<td style="vertical-align:top"><h:form>
 					<h:commandLink value="edit my profile" action="#{personManager.editMyProfile}" />
 				</h:form></td>

@@ -1,5 +1,6 @@
 package getbuzee.service;
 
+import getbuzee.entity.Event;
 import getbuzee.entity.Person;
 import getbuzee.exception.ValidationException;
 
@@ -32,127 +33,84 @@ public class EventService implements Serializable {
     @Inject
     private EntityManager em;
     
-    private List<Person> allPersons;
+    private List<Event> allEvents;
 
     // ======================================
     // =              Public Methods        =
     // ======================================
 
-    public boolean doesLoginAlreadyExist(final String login) {
 
-        if (login == null)
-            throw new ValidationException("Login cannot be null");
+    public Event createEvent(final Event Event) {
 
-        // Login has to be unique
-        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN, Person.class);
-        typedQuery.setParameter("login", login);
-        try {
-            typedQuery.getSingleResult();
-            return true;
-        } catch (NoResultException e) {
-            return false;
-        }
+        if (Event == null)
+            throw new ValidationException("Event object is null");
+
+        em.persist(Event);
+
+        return Event;
     }
 
-    public Person createPerson(final Person Person) {
+    public Event findEventByName(final String name) {
 
-        if (Person == null)
-            throw new ValidationException("Person object is null");
-
-        em.persist(Person);
-
-        return Person;
-    }
-
-    public Person findPersonByLogin(final String login) {
-
-        if (login == null)
-            throw new ValidationException("Invalid login");
+        if (name == null)
+            throw new ValidationException("Invalid name");
         em.flush();
-        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN,Person.class);
-        typedQuery.setParameter("login", login);
+        TypedQuery<Event> typedQuery = em.createNamedQuery(Event.FIND_BY_NAME,Event.class);
+        typedQuery.setParameter("name", name);
 
         try {
-            Person person = (Person)typedQuery.getSingleResult();
-            em.refresh(person);
-            return person;
+            Event event = (Event)typedQuery.getSingleResult();
+            em.refresh(event);
+            return event;
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public Person findPersonByLoginPassword(final String login, final String password) {
-
-        if (login == null)
-            throw new ValidationException("Invalid login");
-        if (password == null)
-            throw new ValidationException("Invalid password");
-
-        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_BY_LOGIN_PASSWORD, Person.class);
-        typedQuery.setParameter("login", login);
-        typedQuery.setParameter("password", password); 
-        
-        try {
-        Person person = typedQuery.getSingleResult();
-        em.refresh(person);
-        return person;
-        } catch (NoResultException e) {
-            return null;
-        }
+    public List<Event> findAllEvents() {
+        TypedQuery<Event> typedQuery = em.createNamedQuery(Event.FIND_ALL_EVENTS, Event.class);
+        this.allEvents = typedQuery.getResultList();
+        return allEvents;
     }
 
-    public List<Person> findAllPersons() {
-        TypedQuery<Person> typedQuery = em.createNamedQuery(Person.FIND_ALL_PERSONS, Person.class);
-        this.allPersons = typedQuery.getResultList();
-        return allPersons;
-    }
-
-    public Person updatePerson(Person person) {
+    public Event updateEvent(Event event) {
 
         // Make sure the object is valid
-        if (person == null)
-            throw new ValidationException("Person object is null");
+        if (event == null)
+            throw new ValidationException("Event object is null");
         // Update the object in the database        
-        person = em.merge(person);       
+        event = em.merge(event);       
 
-        return person;
+        return event;
     }
     
-    public void removeFriend(final Person friend1,final Person friend2){
-    	Query q = em.createNativeQuery("delete from friendship where (friendsiasked_id= ? and friendsaskedme_id= ?) or (friendsiasked_id= ? and friendsaskedme_id= ?)");
-    	q.setParameter(1, friend1.getPersonId());
-    	q.setParameter(2, friend2.getPersonId());
-    	q.setParameter(3, friend2.getPersonId());
-    	q.setParameter(4, friend1.getPersonId());
+    public void removeParticipant(final Person person,final Event event){
+    	Query q = em.createNativeQuery("delete from participation where person_id= ? and event_id= ? ");
+    	q.setParameter(1, person.getPersonId());
+    	q.setParameter(2, event.getEventId());
     	q.executeUpdate();
     }
 
-    public void removePerson(final Person person) {
-        if (person == null)
-            throw new ValidationException("Person object is null");
+    public void removeEvent(final Event event) {
+        if (event == null)
+            throw new ValidationException("Event object is null");
 
-        em.remove(em.merge(person));
+        em.remove(em.merge(event));
     }    
     
-    public List<Person> findFriends(Person person){
-    	Query q = em.createQuery("select p from Person p where p.friendsIAsked= :person and p.friendsAskedMe = :person");
-    	q.setParameter("person", person);
-    	List<Person> friends = (List<Person>) q.getResultList();
-    	return friends;
-    }
     
-    public void dropTablePerson(){
-    	em.createNativeQuery("delete from friendship").executeUpdate();
-    	em.createNativeQuery("delete from person").executeUpdate();
+    public void dropTableEvent(){
+    	em.createNativeQuery("delete from participation").executeUpdate();
+    	em.createNativeQuery("delete from event").executeUpdate();
     	em.flush();
     }
 
-	public List<Person> getAllPersons() {
-		return allPersons;
+	public List<Event> getAllEvents() {
+		return allEvents;
 	}
 
-	public void setAllPersons(List<Person> allPersons) {
-		this.allPersons = allPersons;
+	public void setAllEvents(List<Event> allEvents) {
+		this.allEvents = allEvents;
 	}
     
     

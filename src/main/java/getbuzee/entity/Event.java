@@ -17,6 +17,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -36,22 +38,23 @@ public class Event implements Serializable,Cloneable{
 	private Long eventId;
 	private String name;
 	private String type;
-	private Date date;
+	private String date;
 	private String description;
+	private String creator;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="PARTICIPATION",joinColumns=
 		@JoinColumn(name="EVENT_ID",referencedColumnName="eventId"),
 		inverseJoinColumns=
 		@JoinColumn(name="PERSON_ID",referencedColumnName="personId"))
-	private List<Event> participants = new ArrayList<Event>(0);
+	private List<Person> participants = new ArrayList<Person>(0);
 	
     public static final String FIND_BY_NAME = "Event.findByLogin";    
     public static final String FIND_ALL_EVENTS = "Event.findAll";
 	
     public Event(){    	
-    }
-    
+    }    
+	
 
 	/**
 	 * @param eventId
@@ -59,21 +62,20 @@ public class Event implements Serializable,Cloneable{
 	 * @param type
 	 * @param date
 	 * @param description
+	 * @param creator
 	 * @param participants
 	 */
-	public Event(Long eventId, String name, String type, Date date,
-			String description, List<Event> participants) {
+	public Event(Long eventId, String name, String type, String date,
+			String description, String creator, List<Person> participants) {
 		super();
 		this.eventId = eventId;
 		this.name = name;
 		this.type = type;
 		this.date = date;
 		this.description = description;
+		this.creator = creator;
 		this.participants = participants;
 	}
-
-
-	
 
 	/**
 	 * @return the eventId
@@ -120,14 +122,14 @@ public class Event implements Serializable,Cloneable{
 	/**
 	 * @return the date
 	 */
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
 	/**
 	 * @param date the date to set
 	 */
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -146,16 +148,30 @@ public class Event implements Serializable,Cloneable{
 	}
 
 	/**
+	 * @return the creator
+	 */
+	public String getCreator() {
+		return creator;
+	}
+
+	/**
+	 * @param creator the creator to set
+	 */
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	/**
 	 * @return the participants
 	 */
-	public List<Event> getParticipants() {
+	public List<Person> getParticipants() {
 		return participants;
 	}
 
 	/**
 	 * @param participants the participants to set
 	 */
-	public void setParticipants(List<Event> participants) {
+	public void setParticipants(List<Person> participants) {
 		this.participants = participants;
 	}
 

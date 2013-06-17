@@ -1,8 +1,10 @@
 package getbuzee.web;
 
 import getbuzee.authentication.AccountController;
+import getbuzee.entity.Event;
 import getbuzee.entity.Person;
 import getbuzee.exception.CatchException;
+import getbuzee.service.EventService;
 import getbuzee.service.PersonService;
 
 import java.io.Serializable;
@@ -29,11 +31,16 @@ public class PersonManager  implements Serializable{
 
 	@Inject
     private PersonService personService;
+	
+	@Inject
+    private EventService eventService;
     
     @Inject
     private AccountController accountController;
     
     private Person currentPerson;
+    
+    private Event currentEvent;
     
     private List<Person> allPersons;
     
@@ -138,6 +145,14 @@ public class PersonManager  implements Serializable{
 		this.personsIAsked = new ArrayList<Person>(loggedInPerson.getFriendsIAsked());
 		if (this.personsIAsked != null && myFriends != null) this.personsIAsked.removeAll(myFriends);
 		return personsIAsked;
+	}
+	
+	
+	public String createEvent(Event event){
+		event.setCreator(accountController.getloggedInPerson().getLogin());
+		event.getParticipants().add(accountController.getloggedInPerson());
+		eventService.createEvent(event);
+		return "main";
 	}
 
 	public void setMyFriends(List<Person> myFriends) {
