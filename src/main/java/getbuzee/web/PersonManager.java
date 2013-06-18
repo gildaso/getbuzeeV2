@@ -147,16 +147,28 @@ public class PersonManager  implements Serializable{
 		return personsIAsked;
 	}
 	
+	public String accessCreateEvent(){
+		currentEvent=new Event();
+		return "createEvent";
+	}
 	
-	public String createEvent(Event event){
-		event.setCreator(accountController.getloggedInPerson().getLogin());
-		event.getParticipants().add(accountController.getloggedInPerson());
-		eventService.createEvent(event);
+	public String createEvent(){
+		currentEvent.setCreator(accountController.getloggedInPerson().getLogin());
+		currentEvent.getParticipants().add(accountController.getloggedInPerson());
+		eventService.createEvent(currentEvent);
 		return "main";
 	}
 
 	public void setMyFriends(List<Person> myFriends) {
 		this.myFriends = myFriends;
+	}
+
+	public Event getCurrentEvent() {
+		return currentEvent;
+	}
+
+	public void setCurrentEvent(Event currentEvent) {
+		this.currentEvent = currentEvent;
 	}
 
 	public AccountController getAccountController() {

@@ -52,8 +52,9 @@ public class EventManager  implements Serializable{
 		this.allEvents = allEvents;
 	}
     
-	public String createEvent(Event event){
-		eventService.createEvent(event);
+	public String createEvent(){
+		eventService.createEvent(currentEvent);
+		currentEvent=null;
 		return "main";
 	}
     

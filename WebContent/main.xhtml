@@ -93,13 +93,22 @@
 						<f:facet name="header">
 							<h:outputText value="name"/>
 						</f:facet>
-						<h:outputText value="#{events.name}"/>
+						<h:form>
+						<h:commandLink value="#{events.name}" action="accessEvent">
+							<f:setPropertyActionListener
+										target="#{eventManager.currentEvent}" value="#{events}" />
+						</h:commandLink>
+						</h:form>				
 					</h:column>
 				</h:dataTable>
+				<h:form>
+					<h:commandButton value="create an event" action="#{personManager.accessCreateEvent}"/>					
+				</h:form>	
 			</td>
 			<td style="vertical-align:top"><h:form>
 					<h:commandLink value="edit my profile" action="#{personManager.editMyProfile}" />
-				</h:form></td>
+				</h:form>
+			</td>
 		</tr>
 	</table>
 	<h:form>
