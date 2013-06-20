@@ -38,6 +38,9 @@ public class PersonManager  implements Serializable{
     @Inject
     private AccountController accountController;
     
+    @Inject
+    private EventManager eventManager;
+    
     private Person currentPerson;
     
     private Event currentEvent;
@@ -152,11 +155,19 @@ public class PersonManager  implements Serializable{
 		return "createEvent";
 	}
 	
-	public String createEvent(){
+	public String createEvent(){	
 		currentEvent.setCreator(accountController.getloggedInPerson().getLogin());
 		currentEvent.getParticipants().add(accountController.getloggedInPerson());
 		eventService.createEvent(currentEvent);
 		return "main";
+	}
+	
+	public void participate(){
+		currentEvent=eventManager.getCurrentEvent();
+		if (currentEvent != null && currentEvent.getParticipants() != null && !currentEvent.getParticipants().contains(accountController.getloggedInPerson())){
+			currentEvent.getParticipants().add(accountController.getloggedInPerson());
+			eventService.updateEvent(currentEvent);
+		}
 	}
 
 	public void setMyFriends(List<Person> myFriends) {
