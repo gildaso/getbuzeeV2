@@ -109,8 +109,8 @@ public class AccountController extends Controller implements Serializable {
         if (!conversation.isTransient()) {
             conversation.end();
         }
-        addInformationMessage("been_loggedout");
-        return "main.faces";
+        //addInformationMessage("been_loggedout");
+        return "login";
     }
 
     public String doUpdateAccount() {

@@ -42,7 +42,7 @@
 								<h:commandLink value="confirmFriend"
 									actionListener="#{personManager.addOrConfirmFriend(person)}"
 									action="main"
-									rendered="#{personManager.isPersonAskedMe(person)}" />
+									rendered="#{personManager.isPersonAskedMe(person) and !personManager.isPersonIAsked(person)}" />
 								<h:commandLink value="suppressFriend"
 									actionListener="#{personManager.suppressFriend(person)}"
 									action="main" rendered="#{personManager.isFriend(person)}" />
@@ -112,7 +112,7 @@
 		</tr>
 	</table>
 	<h:form>
-		<h:commandButton value="back" action="login" />
+		<h:commandButton value="logout" action="#{accountController.doLogout}" />
 	</h:form>
 </body>
 </html>

@@ -149,9 +149,17 @@ public class Person implements Serializable,Cloneable{
 
 	public void setFriendsIAsked(List<Person> friendsIAsked) {
 		this.friendsIAsked = friendsIAsked;
-	}
+	}	
 
 	
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+
 	public List<Person> getFriends() {
 		List<Person> myFriends = new ArrayList<Person>(); 
 		myFriends = getFriendsAskedMe();

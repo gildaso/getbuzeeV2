@@ -26,5 +26,20 @@
      <h:form>
      	<h:commandButton value="Back" action="main"/>
      </h:form>
+	<h1>Here is the list of the events #{personManager.currentPerson.login} is participating</h1>
+		<h:dataTable align="center" var="event"
+			value="#{personManager.currentPerson.events}">
+			<h:column>
+				<f:facet name="header">
+					<h:outputText value="user" />
+				</f:facet>
+				<h:form>
+					<h:commandLink value="#{event.name}" action="accessEvent">
+						<f:setPropertyActionListener target="#{eventManager.currentEvent}"
+							value="#{event}" />
+					</h:commandLink>
+				</h:form>
+			</h:column>
+		</h:dataTable>     
 </body>	
 </html>          
